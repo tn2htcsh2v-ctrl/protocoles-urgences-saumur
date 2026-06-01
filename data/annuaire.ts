@@ -1,0 +1,75 @@
+export const annuaire = [
+  { service: "Urgences", fonction: "Dr MAO", numero: "8724" },
+  { service: "Urgences", fonction: "Dr Urgences", numero: "8895" },
+  { service: "Urgences", fonction: "Dr SMUR", numero: "8723" },
+
+  { service: "Urgences", fonction: "Interne 1", numero: "8898" },
+  { service: "Urgences", fonction: "Interne 2", numero: "8722" },
+  { service: "Urgences", fonction: "Interne 3", numero: "8726" },
+
+  { service: "Urgences", fonction: "Cadre SAU", numero: "8824" },
+  { service: "Urgences", fonction: "IADE SMUR", numero: "8826" },
+  { service: "Urgences", fonction: "Ambu SMUR", numero: "8890" },
+  { service: "Urgences", fonction: "Brancardage", numero: "8524" },
+  { service: "Urgences", fonction: "IDE psy", numero: "8947" },
+  { service: "Urgences", fonction: "Assistante sociale", numero: "8986" },
+  { service: "Urgences", fonction: "Secrétariat", numero: "3101" },
+  { service: "Urgences", fonction: "Secrétariat PASS", numero: "3502" },
+
+  { service: "Cardiologie", fonction: "Cardiologue de garde", numero: "8737" },
+  { service: "Cardiologie", fonction: "Dr SANFO", numero: "8842" },
+  { service: "Cardiologie", fonction: "Dr POPESCU", numero: "8781" },
+  { service: "Cardiologie", fonction: "Dr AIT ALI", numero: "8727" },
+  { service: "Cardiologie", fonction: "Dr MEKHDOUL", numero: "8865" },
+
+  { service: "USC", fonction: "Médecin USC (Anesthésiste)", numero: "8815" },
+
+  { service: "Neurologie", fonction: "EEG", numero: "8776" },
+  { service: "Neurologie", fonction: "Dr DUBNITSKY", numero: "8875" },
+  { service: "Neurologie", fonction: "Dr BICHON", numero: "8906" },
+  { service: "Neurologie", fonction: "Dr BOISET", numero: "8997" },
+  { service: "Neurologie", fonction: "Dr CRESME", numero: "8854" },
+  { service: "Neurologie", fonction: "Dr KAMGA", numero: "8510" },
+
+  { service: "Pédiatrie", fonction: "Pédiatre de garde", numero: "8800" },
+
+  { service: "Gynécologie - Obstétrique", fonction: "Gynécologue de garde", numero: "8883" },
+
+  { service: "Gériatrie", fonction: "Dr LECLERC", numero: "8896" },
+  { service: "Gériatrie", fonction: "Dr POCHIC", numero: "8916" },
+  { service: "Gériatrie", fonction: "Dr HOUVET", numero: "8560" },
+  { service: "Gériatrie", fonction: "Dr TERRAO", numero: "8704" },
+  { service: "Gériatrie", fonction: "Dr SAUTRET", numero: "2875" },
+  { service: "Gériatrie", fonction: "Dr MONTERITO", numero: "8060" },
+  { service: "Gériatrie", fonction: "Dr HUYNE", numero: "8933" },
+
+  { service: "Radiologie", fonction: "Téléradiologie", numero: "04 48 04 05 06" },
+  { service: "Radiologie", fonction: "Manip RX", numero: "8814" },
+  { service: "Radiologie", fonction: "Manip TDM 1", numero: "2378" },
+  { service: "Radiologie", fonction: "Manip TDM 2", numero: "2392" },
+  { service: "Radiologie", fonction: "Radiologue", numero: "8897" },
+  { service: "Radiologie", fonction: "Échographiste", numero: "3104" },
+  { service: "Radiologie", fonction: "Dr CRA", numero: "9898" },
+  { service: "Radiologie", fonction: "M. LEBOUCHER", numero: "8607" },
+
+  { service: "Médecine interne - Gastro", fonction: "Dr BALLET", numero: "8866" },
+  { service: "Médecine interne - Gastro", fonction: "Dr ILIESCU", numero: "8538" },
+  { service: "Médecine interne - Gastro", fonction: "Dr RECOURT", numero: "8511" },
+  { service: "Médecine interne - Gastro", fonction: "Dr MARAL", numero: "8775" },
+
+  { service: "CHU Angers", fonction: "Interne neurochirurgie", numero: "07 63 94 74 30" },
+  { service: "CHU Angers", fonction: "Alerte thrombolyse", numero: "07 62 92 68 53" },
+  { service: "CHU Angers", fonction: "Interne hémodige", numero: "06 65 80 75 51" },
+  { service: "CHU Angers", fonction: "Interne cardio-USIC", numero: "06 65 80 66 90" },
+  { service: "CHU Angers", fonction: "Interne chirurgie orthopédique", numero: "06 65 80 68 31" },
+  { service: "CHU Angers", fonction: "Déchocage", numero: "06 29 73 89 08" },
+  { service: "CHU Angers", fonction: "Réanimation médicale", numero: "06 65 80 68 90" },
+  { service: "CHU Angers", fonction: "Chirurgie viscérale", numero: "06 65 80 67 13" },
+  { service: "CHU Angers", fonction: "Centre anti-poison", numero: "02 41 48 21 21" },
+  { service: "CHU Angers", fonction: "Centre Paul Papin", numero: "02 41 35 27 00" },
+
+  { service: "Trélazé", fonction: "Urgences main 8h-20h", numero: "07 66 36 93 95" },
+  { service: "Trélazé", fonction: "Urgences main nuit", numero: "02 41 41 73 38" },
+  { service: "Trélazé", fonction: "Chirurgie orthopédique", numero: "06 66 92 22 14" },
+  { service: "Trélazé", fonction: "Saint-Joseph Cardiologie", numero: "02 41 47 71 72" },
+];
