@@ -29,6 +29,7 @@ export default function Home() {
               alt="SMUR 49"
               width={180}
               height={180}
+              className="h-auto w-auto"
             />
 
             <h1 className="text-3xl md:text-4xl font-bold text-center mt-4 text-slate-900">
