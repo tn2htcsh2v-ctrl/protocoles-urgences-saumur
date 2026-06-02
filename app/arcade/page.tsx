@@ -1,19 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 type Obstacle = {
-  emoji: string;
   name: string;
   action: "jump" | "slide";
 };
 
 const obstacles: Obstacle[] = [
-  { emoji: "🛏️", name: "Brancard", action: "jump" },
-  { emoji: "🍺", name: "Patient alcoolisé", action: "jump" },
-  { emoji: "💉", name: "Seringues volantes", action: "slide" },
-  { emoji: "📁", name: "Dossiers patients", action: "slide" },
+  { name: "Brancard", action: "jump" },
+  { name: "Patient alcoolisé", action: "jump" },
+  { name: "Seringues volantes", action: "slide" },
+  { name: "Dossiers patients", action: "slide" },
 ];
 
 export default function ArcadePage() {
@@ -21,15 +20,12 @@ export default function ArcadePage() {
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [distance, setDistance] = useState(0);
-  const [speed, setSpeed] = useState(2);
+  const [speed, setSpeed] = useState(1.4);
   const [jumping, setJumping] = useState(false);
   const [sliding, setSliding] = useState(false);
-  const [touchStartY, setTouchStartY] = useState<number | null>(null);
-  const [obstacleX, setObstacleX] = useState(100);
+  const [obstacleX, setObstacleX] = useState(105);
   const [currentObstacle, setCurrentObstacle] = useState<Obstacle>(obstacles[0]);
   const [highScores, setHighScores] = useState<number[]>([]);
-
-  const lastTouchTime = useRef(0);
 
   const screens = [
     { title: "08h29", text: "La garde est sur le point de finir..." },
@@ -52,22 +48,33 @@ export default function ArcadePage() {
   ];
 
   const currentGameBackground =
-    backgrounds[Math.floor(distance / 250) % backgrounds.length];
+    backgrounds[Math.floor(distance / 200) % backgrounds.length];
 
   useEffect(() => {
     try {
       const savedScores = localStorage.getItem("saumur-run-scores");
-      if (savedScores) {
-        setHighScores(JSON.parse(savedScores));
-      }
+      if (savedScores) setHighScores(JSON.parse(savedScores));
     } catch {
       setHighScores([]);
     }
   }, []);
 
+  useEffect(() => {
+    if (gameStarted) return;
+
+    const timer = setTimeout(() => {
+      if (step < screens.length - 1) {
+        setStep((s) => s + 1);
+      } else {
+        setGameStarted(true);
+      }
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, [step, gameStarted]);
+
   function chooseRandomObstacle() {
-    const randomIndex = Math.floor(Math.random() * obstacles.length);
-    setCurrentObstacle(obstacles[randomIndex]);
+    setCurrentObstacle(obstacles[Math.floor(Math.random() * obstacles.length)]);
   }
 
   function saveScore() {
@@ -82,91 +89,47 @@ export default function ArcadePage() {
     } catch {}
   }
 
-  function advanceIntro() {
-    setStep((currentStep) => {
-      if (currentStep >= screens.length - 1) {
-        setGameStarted(true);
-        return currentStep;
-      }
-
-      return currentStep + 1;
-    });
-  }
-useEffect(() => {
-  if (gameStarted) return;
-
-  const timer = setTimeout(() => {
-    advanceIntro();
-  }, 2500);
-
-  return () => clearTimeout(timer);
-}, [step, gameStarted]);
-  function handleIntroTouch(e: React.TouchEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    e.stopPropagation();
-    lastTouchTime.current = Date.now();
-    advanceIntro();
-  }
-
-  function handleIntroClick(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (Date.now() - lastTouchTime.current < 700) return;
-
-    advanceIntro();
-  }
-
   useEffect(() => {
     if (!gameStarted || gameOver) return;
 
     const timer = setInterval(() => {
       setDistance((d) => d + 1);
-    }, 100);
+    }, 120);
 
     return () => clearInterval(timer);
   }, [gameStarted, gameOver]);
 
   useEffect(() => {
-    if (distance > 1000) {
-      setSpeed(5);
-    } else if (distance > 500) {
-      setSpeed(4);
-    } else if (distance > 250) {
-      setSpeed(3);
-    } else if (distance > 100) {
-      setSpeed(2.5);
-    } else {
-      setSpeed(2);
-    }
+    if (distance > 900) setSpeed(2.8);
+    else if (distance > 600) setSpeed(2.4);
+    else if (distance > 350) setSpeed(2);
+    else if (distance > 150) setSpeed(1.7);
+    else setSpeed(1.4);
   }, [distance]);
 
   useEffect(() => {
     if (!gameStarted || gameOver) return;
 
-    const obstacleTimer = setInterval(() => {
+    const timer = setInterval(() => {
       setObstacleX((x) => {
-        if (x <= -10) {
+        if (x <= -25) {
           chooseRandomObstacle();
-          return 110;
+          return 115;
         }
 
         return x - speed;
       });
-    }, 50);
+    }, 45);
 
-    return () => clearInterval(obstacleTimer);
+    return () => clearInterval(timer);
   }, [gameStarted, gameOver, speed]);
 
   useEffect(() => {
     if (!gameStarted || gameOver) return;
 
-    const isTouchingPlayer =
-      currentObstacle.name === "Brancard"
-        ? obstacleX > 7 && obstacleX < 10
-        : obstacleX > 6 && obstacleX < 11;
+    const touchingPlayer = obstacleX > 13 && obstacleX < 23;
 
-    if (!isTouchingPlayer) return;
+    if (!touchingPlayer) return;
 
     if (currentObstacle.action === "jump" && !jumping) {
       saveScore();
@@ -177,26 +140,26 @@ useEffect(() => {
       saveScore();
       setGameOver(true);
     }
-  }, [obstacleX, jumping, sliding, currentObstacle, gameStarted, gameOver]);
+  }, [obstacleX, currentObstacle, jumping, sliding, gameStarted, gameOver]);
 
   function jump() {
-    if (!jumping && !sliding && !gameOver) {
-      setJumping(true);
-      setTimeout(() => setJumping(false), 450);
-    }
+    if (jumping || sliding || gameOver) return;
+
+    setJumping(true);
+    setTimeout(() => setJumping(false), 500);
   }
 
   function slide() {
-    if (!jumping && !sliding && !gameOver) {
-      setSliding(true);
-      setTimeout(() => setSliding(false), 800);
-    }
+    if (jumping || sliding || gameOver) return;
+
+    setSliding(true);
+    setTimeout(() => setSliding(false), 750);
   }
 
   function restartGame() {
     setDistance(0);
-    setSpeed(2);
-    setObstacleX(100);
+    setSpeed(1.4);
+    setObstacleX(105);
     setJumping(false);
     setSliding(false);
     setGameOver(false);
@@ -204,191 +167,55 @@ useEffect(() => {
     setCurrentObstacle(obstacles[0]);
   }
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.repeat) return;
-
-      if (!gameStarted) {
-        if (e.key === "Enter" || e.code === "Space") {
-          advanceIntro();
-        }
-        return;
-      }
-
-      if (e.key === "ArrowUp" || e.code === "Space") {
-        jump();
-      }
-
-      if (e.key === "ArrowDown") {
-        slide();
-      }
-
-      if (e.key === "Enter" && gameOver) {
-        restartGame();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [jumping, sliding, gameOver, gameStarted]);
-
-  function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
-    setTouchStartY(e.touches[0].clientY);
-  }
-
-  function handleTouchEnd(e: React.TouchEvent<HTMLDivElement>) {
-    if (touchStartY === null) return;
-
-    const touchEndY = e.changedTouches[0].clientY;
-    const difference = touchStartY - touchEndY;
-
-    if (difference > 50) jump();
-    if (difference < -50) slide();
-
-    setTouchStartY(null);
-  }
-
-  if (gameStarted) {
+  if (!gameStarted) {
     return (
-      <main className="min-h-screen bg-slate-900 text-white p-4">
-        <div className="max-w-4xl mx-auto">
-          <Link href="/arcade" className="inline-block mb-6 text-blue-300 font-semibold">
-            ← Recommencer l'intro
+      <main className="min-h-screen bg-slate-900 text-white p-3">
+        <div className="mx-auto max-w-md">
+          <Link href="/" className="inline-block mb-3 text-blue-300 font-semibold">
+            ← Retour
           </Link>
 
-          <div className="bg-slate-800 rounded-3xl p-6 shadow-xl">
-            <h1 className="text-3xl font-bold mb-6">🎮 Saumur Emergency Run</h1>
+          <div
+            className="relative h-[82vh] rounded-3xl overflow-hidden shadow-xl bg-cover bg-center"
+            style={{ backgroundImage: "url('/arcade/background.png')" }}
+          >
+            <div className="absolute inset-0 bg-black/10" />
 
-            <div className="bg-slate-700 rounded-2xl p-4 mb-4 flex justify-between gap-4">
-              <div>
-                <p className="text-xl font-bold">Distance : {distance} m</p>
-                <p className="text-sm text-slate-300">Vitesse : {speed.toFixed(1)}</p>
+            <h1 className="absolute top-8 left-4 right-4 text-4xl font-bold text-center text-white drop-shadow-lg">
+              🎮 Saumur Emergency Run
+            </h1>
+
+            <div className="absolute left-4 right-4 bottom-8 bg-white text-slate-900 border-4 border-slate-900 rounded-2xl p-4 shadow-xl min-h-[150px] z-10">
+              <div className="flex items-center gap-3">
+                {current.speaker && (
+                  <img
+                    src="/arcade/severine.png"
+                    alt="Séverine"
+                    className="w-20 h-20 object-contain flex-shrink-0"
+                  />
+                )}
+
+                <div>
+                  {current.title && (
+                    <h2 className="text-2xl font-bold mb-2">{current.title}</h2>
+                  )}
+
+                  {current.speaker && (
+                    <div className="text-pink-600 font-bold text-lg mb-1">
+                      Séverine
+                    </div>
+                  )}
+
+                  <p className="text-xl leading-snug font-semibold">
+                    {current.text}
+                  </p>
+                </div>
               </div>
 
-              <p className="text-sm text-slate-300">
-                Obstacle : {currentObstacle.name}
+              <p className="text-center text-xs text-slate-500 mt-3">
+                L’intro avance automatiquement...
               </p>
             </div>
-
-            <div
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-              className="h-64 bg-slate-600 rounded-2xl relative overflow-hidden touch-none"
-            >
-              <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${currentGameBackground})` }}
-              />
-
-              <div className="absolute bottom-0 left-0 right-0 h-4 bg-slate-300" />
-
-              <div
-                className={`absolute transition-all ${
-                  jumping
-                    ? "bottom-28 left-12 duration-200 ease-out"
-                    : sliding
-                    ? "bottom-0 left-12 duration-300"
-                    : "bottom-0 left-12 translate-y-2 duration-500 ease-in"
-                }`}
-              >
-                <img
-                  src={sliding ? "/arcade/player-slide.png" : "/arcade/player.png"}
-                  alt="Joueur"
-                  className={`object-contain ${sliding ? "w-28 h-28" : "w-40 h-40"}`}
-                />
-              </div>
-
-              <div
-                className={`absolute transition-none ${
-                  currentObstacle.action === "jump" ? "bottom-4" : "bottom-28"
-                }`}
-                style={{ left: `${obstacleX}%` }}
-              >
-                {currentObstacle.name === "Seringues volantes" ? (
-                  <img src="/arcade/syringe.png" alt="Seringues" className="w-28 h-28 object-contain translate-y-10" />
-                ) : currentObstacle.name === "Patient alcoolisé" ? (
-                  <img src="/arcade/drunk-patient.png" alt="Patient alcoolisé" className="w-40 h-40 object-contain translate-y-8" />
-                ) : currentObstacle.name === "Brancard" ? (
-                  <img src="/arcade/stretcher.png" alt="Brancard" className="w-40 h-40 object-contain translate-y-12" />
-                ) : currentObstacle.name === "Dossiers patients" ? (
-                  <img src="/arcade/files.png" alt="Dossiers patients" className="w-24 h-24 object-contain translate-y-6" />
-                ) : null}
-              </div>
-
-              {gameOver && (
-                <div className="absolute inset-0 bg-black/70 flex items-center justify-center p-3">
-                  <div className="bg-slate-900 rounded-3xl p-4 text-center shadow-xl max-w-sm w-full max-h-[95%] overflow-y-auto">
-                    <div className="text-5xl mb-3">💀</div>
-
-                    <h2 className="text-3xl font-bold mb-3">Garde terminée</h2>
-
-                    <p className="text-xl mb-2">
-                      Tu as parcouru{" "}
-                      <span className="font-bold text-green-300">{distance} m</span>
-                    </p>
-
-                    <p className="text-sm text-slate-300 mb-4">
-                      Obstacle fatal : {currentObstacle.name}
-                    </p>
-
-                    <div className="bg-slate-800 rounded-2xl p-3 mb-3 text-left">
-                      <h3 className="text-lg font-bold mb-3 text-yellow-300">
-                        🏆 Top 10
-                      </h3>
-
-                      {highScores.length === 0 ? (
-                        <p className="text-sm text-slate-300">
-                          Aucun record enregistré
-                        </p>
-                      ) : (
-                        <ol className="space-y-1 text-sm">
-                          {highScores.map((score, index) => (
-                            <li key={index}>
-                              {index + 1}. {score} m
-                            </li>
-                          ))}
-                        </ol>
-                      )}
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={restartGame}
-                      className="w-full bg-green-600 hover:bg-green-700 rounded-2xl p-5 font-bold text-xl"
-                    >
-                      🔁 Rejouer
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 mt-6">
-              <button
-                type="button"
-                onClick={jump}
-                disabled={gameOver}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 rounded-2xl p-5 font-bold text-xl"
-              >
-                ⬆️ Sauter
-              </button>
-
-              <button
-                type="button"
-                onClick={slide}
-                disabled={gameOver}
-                className="bg-purple-600 hover:bg-purple-700 disabled:bg-slate-600 rounded-2xl p-5 font-bold text-xl"
-              >
-                ⬇️ Glissade
-              </button>
-            </div>
-
-            <p className="mt-4 text-sm text-slate-300 text-center">
-              Brancard / patient alcoolisé = sauter • Seringues / dossiers = glisser
-              <br />
-              Téléphone : swipe haut pour sauter, swipe bas pour glisser.
-            </p>
           </div>
         </div>
       </main>
@@ -396,47 +223,166 @@ useEffect(() => {
   }
 
   return (
-    <main className="min-h-screen bg-slate-900 text-white p-4">
-      <div className="max-w-5xl mx-auto">
-        <Link href="/" className="inline-block mb-6 text-blue-300 font-semibold">
-          ← Retour à l'accueil
-        </Link>
+    <main className="min-h-screen bg-slate-900 text-white p-3 overflow-hidden">
+      <div className="mx-auto max-w-md">
+        <div className="flex justify-between items-center mb-3">
+          <Link href="/arcade" className="text-blue-300 font-semibold text-sm">
+            ← Intro
+          </Link>
 
-        <div
-          className="relative rounded-3xl overflow-hidden shadow-xl min-h-[620px] bg-cover bg-center"
-          style={{ backgroundImage: "url('/arcade/background.png')" }}
-        >
-          <div className="absolute inset-0 bg-black/10 pointer-events-none" />
-
-          <h1 className="absolute top-8 left-0 right-0 text-5xl font-bold text-center text-white drop-shadow-lg">
-            🎮 Saumur Emergency Run
-          </h1>
-
-          <div className="absolute left-8 right-8 bottom-28 bg-white text-slate-900 border-4 border-slate-900 rounded-2xl p-5 shadow-xl min-h-[130px] z-10 flex items-center gap-5">
-            {current.speaker && (
-              <img
-                src="/arcade/severine.png"
-                alt="Séverine"
-                className="w-24 h-24 object-contain flex-shrink-0"
-              />
-            )}
-
-            <div>
-              {current.title && (
-                <h2 className="text-2xl font-bold mb-2">{current.title}</h2>
-              )}
-
-              {current.speaker && (
-                <div className="text-pink-600 font-bold text-xl mb-2">
-                  Séverine
-                </div>
-              )}
-
-              <p className="text-2xl leading-relaxed font-semibold">
-                {current.text}
-              </p>
-            </div>
+          <div className="text-right">
+            <p className="text-2xl font-bold">{distance} m</p>
+            <p className="text-xs text-slate-300">Vitesse {speed.toFixed(1)}</p>
           </div>
+        </div>
+
+        <div className="bg-slate-800 rounded-3xl p-3 shadow-xl">
+          <div className="text-center mb-2">
+            <h1 className="text-2xl font-bold">🎮 Saumur Emergency Run</h1>
+            <p className="text-xs text-slate-300">
+              {currentObstacle.action === "jump"
+                ? "Obstacle bas : saute !"
+                : "Obstacle haut : baisse-toi !"}
+            </p>
+          </div>
+
+          <div className="h-[58vh] min-h-[430px] max-h-[620px] bg-slate-600 rounded-2xl relative overflow-hidden touch-none">
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(${currentGameBackground})` }}
+            />
+
+            <div className="absolute bottom-0 left-0 right-0 h-8 bg-slate-300" />
+
+            <div
+              className={`absolute left-[10%] transition-all ${
+                jumping
+                  ? "bottom-[170px] duration-200 ease-out"
+                  : sliding
+                  ? "bottom-[8px] duration-200"
+                  : "bottom-[18px] duration-300 ease-in"
+              }`}
+            >
+              <img
+                src={sliding ? "/arcade/player-slide.png" : "/arcade/player.png"}
+                alt="Joueur"
+                className={`object-contain ${
+                  sliding ? "w-24 h-24" : "w-32 h-32"
+                }`}
+              />
+            </div>
+
+            <div
+              className={`absolute transition-none ${
+                currentObstacle.action === "jump"
+                  ? "bottom-[24px]"
+                  : "bottom-[185px]"
+              }`}
+              style={{ left: `${obstacleX}%` }}
+            >
+              {currentObstacle.name === "Seringues volantes" ? (
+                <img
+                  src="/arcade/syringe.png"
+                  alt="Seringues"
+                  className="w-24 h-24 object-contain"
+                />
+              ) : currentObstacle.name === "Patient alcoolisé" ? (
+                <img
+                  src="/arcade/drunk-patient.png"
+                  alt="Patient alcoolisé"
+                  className="w-32 h-32 object-contain"
+                />
+              ) : currentObstacle.name === "Brancard" ? (
+                <img
+                  src="/arcade/stretcher.png"
+                  alt="Brancard"
+                  className="w-36 h-36 object-contain"
+                />
+              ) : currentObstacle.name === "Dossiers patients" ? (
+                <img
+                  src="/arcade/files.png"
+                  alt="Dossiers patients"
+                  className="w-20 h-20 object-contain"
+                />
+              ) : null}
+            </div>
+
+            {gameOver && (
+              <div className="absolute inset-0 bg-black/75 flex items-center justify-center p-3 z-30">
+                <div className="bg-slate-900 rounded-3xl p-4 text-center shadow-xl w-full max-h-[95%] overflow-y-auto">
+                  <div className="text-5xl mb-2">💀</div>
+
+                  <h2 className="text-3xl font-bold mb-2">Garde terminée</h2>
+
+                  <p className="text-xl mb-2">
+                    Score :{" "}
+                    <span className="font-bold text-green-300">
+                      {distance} m
+                    </span>
+                  </p>
+
+                  <p className="text-sm text-slate-300 mb-3">
+                    Obstacle fatal : {currentObstacle.name}
+                  </p>
+
+                  <div className="bg-slate-800 rounded-2xl p-3 mb-3 text-left">
+                    <h3 className="text-lg font-bold mb-2 text-yellow-300">
+                      🏆 Top 10
+                    </h3>
+
+                    {highScores.length === 0 ? (
+                      <p className="text-sm text-slate-300">
+                        Aucun record enregistré
+                      </p>
+                    ) : (
+                      <ol className="space-y-1 text-sm">
+                        {highScores.map((score, index) => (
+                          <li key={index}>
+                            {index + 1}. {score} m
+                          </li>
+                        ))}
+                      </ol>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={restartGame}
+                    onTouchStart={restartGame}
+                    className="w-full bg-green-600 active:bg-green-800 rounded-2xl p-5 font-bold text-2xl"
+                  >
+                    🔁 Rejouer
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 mt-3">
+            <button
+              type="button"
+              onClick={jump}
+              onTouchStart={jump}
+              disabled={gameOver}
+              className="bg-blue-600 active:bg-blue-800 disabled:bg-slate-600 rounded-2xl p-6 font-bold text-2xl select-none"
+            >
+              ⬆️ Sauter
+            </button>
+
+            <button
+              type="button"
+              onClick={slide}
+              onTouchStart={slide}
+              disabled={gameOver}
+              className="bg-purple-600 active:bg-purple-800 disabled:bg-slate-600 rounded-2xl p-6 font-bold text-2xl select-none"
+            >
+              ⬇️ Baisser
+            </button>
+          </div>
+
+          <p className="mt-2 text-xs text-slate-300 text-center">
+            Brancard / patient = sauter • Seringues / dossiers = baisser
+          </p>
         </div>
       </div>
     </main>
