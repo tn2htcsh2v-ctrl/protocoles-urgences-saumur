@@ -32,7 +32,7 @@ export default function Home() {
               className="h-auto w-auto"
             />
 
-            <h1 className="text-3xl md:text-4xl font-bold text-center mt-4 text-slate-900">
+            <h1 className="text-3xl md:text-4xl font-bold text-center mt-4">
               Protocoles des Urgences
             </h1>
 
@@ -54,7 +54,7 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="grid md:grid-cols-3 gap-4 mt-6">
+        <div className="grid md:grid-cols-2 gap-4 mt-6">
           <Link
             href="/annuaire"
             className="bg-green-600 hover:bg-green-700 text-white p-5 rounded-xl font-bold text-center"
@@ -74,6 +74,13 @@ export default function Home() {
             className="bg-purple-600 hover:bg-purple-700 text-white p-5 rounded-xl font-bold text-center"
           >
             🧮 Outils
+          </Link>
+
+          <Link
+            href="/arcade"
+            className="bg-pink-600 hover:bg-pink-700 text-white p-5 rounded-xl font-bold text-center"
+          >
+            🎮 Arcade
           </Link>
         </div>
       </div>
