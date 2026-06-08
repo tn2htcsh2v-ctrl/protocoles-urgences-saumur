@@ -100,12 +100,12 @@ export default function ArcadePage() {
   }, [gameStarted, gameOver]);
 
   useEffect(() => {
-    if (distance > 1200) setSpeed(2.6);
-    else if (distance > 900) setSpeed(2.2);
-    else if (distance > 600) setSpeed(1.8);
-    else if (distance > 300) setSpeed(1.3);
-    else setSpeed(0.9);
-  }, [distance]);
+  if (distance > 1200) setSpeed(2.8);
+  else if (distance > 900) setSpeed(2.4);
+  else if (distance > 600) setSpeed(2.0);
+  else if (distance > 300) setSpeed(1.6);
+  else setSpeed(1.3);
+}, [distance]);
 
   useEffect(() => {
     if (!gameStarted || gameOver) return;
@@ -149,7 +149,7 @@ export default function ArcadePage() {
     if (jumping || sliding || gameOver) return;
 
     setJumping(true);
-    setTimeout(() => setJumping(false), 520);
+    setTimeout(() => setJumping(false), 620);
   }
 
   function slide() {
