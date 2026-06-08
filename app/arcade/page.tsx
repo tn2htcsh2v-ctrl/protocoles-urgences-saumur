@@ -143,10 +143,12 @@ export default function ArcadePage() {
   }
 }
 
-    if (currentObstacle.action === "slide" && !sliding) {
-      saveScore();
-      setGameOver(true);
-    }
+    if (currentObstacle.action === "slide") {
+  if (!sliding) {
+    saveScore();
+    setGameOver(true);
+  }
+}
   }, [obstacleX, currentObstacle, jumping, sliding, gameStarted, gameOver]);
 
   function jump() {
@@ -163,7 +165,7 @@ export default function ArcadePage() {
     if (jumping || sliding || gameOver) return;
 
     setSliding(true);
-    setTimeout(() => setSliding(false), 750);
+    setTimeout(() => setSliding(false), 1400);
   }
 
   function restartGame() {
@@ -286,7 +288,7 @@ export default function ArcadePage() {
               className={`absolute transition-none ${
                 currentObstacle.action === "jump"
   ? "bottom-[68px]"
-  : "bottom-[150px]"
+  : "bottom-[125px]"
               }`}
               style={{ left: `${obstacleX}%` }}
             >
@@ -294,7 +296,7 @@ export default function ArcadePage() {
                 <img
                   src="/arcade/syringe.png"
                   alt="Seringues"
-                  className="w-28 h-28 object-contain"
+                  className="w-32 h-32 object-contain"
                 />
               ) : currentObstacle.name === "Patient alcoolisé" ? (
                 <img
