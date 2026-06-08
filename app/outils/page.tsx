@@ -27,6 +27,12 @@ export default function OutilsPage() {
   href="/outils/nihss"
   className="block bg-indigo-600 text-white p-5 rounded-2xl font-bold text-lg"
 >
+    <Link
+  href="/outils/sutures"
+  className="block bg-emerald-600 text-white p-5 rounded-2xl font-bold text-lg"
+>
+  ✂️ Guide de suture
+</Link>
   🧠 NIHSS
 </Link>
 
