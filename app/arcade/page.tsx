@@ -150,11 +150,14 @@ export default function ArcadePage() {
   }, [obstacleX, currentObstacle, jumping, sliding, gameStarted, gameOver]);
 
   function jump() {
-    if (jumping || sliding || gameOver) return;
+  if (jumping || sliding || gameOver) return;
 
-    setJumping(true);
-    setTimeout(() => setJumping(false), 620);
-  }
+  setJumping(true);
+
+  // Durée volontairement longue : tant que l'animation visuelle montre le joueur en l'air,
+  // le jeu considère aussi qu'il est en l'air.
+  setTimeout(() => setJumping(false), 900);
+}
 
   function slide() {
     if (jumping || sliding || gameOver) return;
@@ -264,7 +267,7 @@ export default function ArcadePage() {
             <div
               className={`absolute left-[10%] transition-all ${
                 jumping
-  ? "bottom-[185px] duration-200 ease-out"
+  ? "bottom-[190px] duration-300 ease-out"
   : sliding
   ? "bottom-[64px] duration-200"
   : "bottom-[82px] duration-300 ease-in"
