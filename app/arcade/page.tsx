@@ -129,15 +129,19 @@ export default function ArcadePage() {
 
     const touchingPlayer =
   currentObstacle.name === "Brancard"
-    ? obstacleX > 8 && obstacleX < 11
-    : obstacleX > 9 && obstacleX < 14;
+    ? obstacleX > 5 && obstacleX < 8
+    : obstacleX > 8 && obstacleX < 13;
 
     if (!touchingPlayer) return;
 
-    if (currentObstacle.action === "jump" && !jumping) {
-      saveScore();
-      setGameOver(true);
-    }
+    if (currentObstacle.action === "jump") {
+  const jumpIsSafe = jumping;
+
+  if (!jumpIsSafe) {
+    saveScore();
+    setGameOver(true);
+  }
+}
 
     if (currentObstacle.action === "slide" && !sliding) {
       saveScore();
