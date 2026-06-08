@@ -268,15 +268,15 @@ export default function ArcadePage() {
                 jumping
   ? "bottom-[190px] duration-300 ease-out"
   : sliding
-  ? "bottom-[64px] duration-200"
-  : "bottom-[76px] duration-300 ease-in"
+  ? "bottom-[58px] duration-75"
+  : "bottom-[76px] duration-200 ease-in"
               }`}
             >
               <img
                 src={sliding ? "/arcade/player-slide.png" : "/arcade/player.png"}
                 alt="Joueur"
                 className={`object-contain ${
-                  sliding ? "w-24 h-24" : "w-28 h-28"
+                  sliding ? "w-20 h-20" : "w-28 h-28"
                 }`}
               />
             </div>
