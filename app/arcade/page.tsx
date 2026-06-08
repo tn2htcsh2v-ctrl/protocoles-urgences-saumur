@@ -272,21 +272,23 @@ export default function ArcadePage() {
   ? "bottom-[190px] duration-300 ease-out"
   : sliding
   ? "bottom-[64px] duration-200"
-  : "bottom-[82px] duration-300 ease-in"
+  : "bottom-[88px] duration-300 ease-in"
               }`}
             >
               <img
                 src={sliding ? "/arcade/player-slide.png" : "/arcade/player.png"}
                 alt="Joueur"
                 className={`object-contain ${
-                  sliding ? "w-20 h-20" : "w-24 h-24"
+                  sliding ? "w-24 h-24" : "w-28 h-28"
                 }`}
               />
             </div>
 
             <div
               className={`absolute transition-none ${
-                currentObstacle.action === "jump"
+                currentObstacle.name === "Dossiers patients"
+  ? "bottom-[145px]"
+  : currentObstacle.action === "jump"
   ? "bottom-[68px]"
   : "bottom-[125px]"
               }`}
