@@ -272,7 +272,7 @@ export default function ArcadePage() {
   ? "bottom-[190px] duration-300 ease-out"
   : sliding
   ? "bottom-[64px] duration-200"
-  : "bottom-[88px] duration-300 ease-in"
+  : "bottom-[76px] duration-300 ease-in"
               }`}
             >
               <img
@@ -304,7 +304,7 @@ export default function ArcadePage() {
                 <img
                   src="/arcade/drunk-patient.png"
                   alt="Patient alcoolisé"
-                  className="w-24 h-24 object-contain"
+                  className="w-32 h-32 object-contain"
                 />
               ) : currentObstacle.name === "Brancard" ? (
                 <img
