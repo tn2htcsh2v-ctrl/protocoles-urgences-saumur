@@ -20,10 +20,10 @@ export default function ArcadePage() {
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [distance, setDistance] = useState(0);
-  const [speed, setSpeed] = useState(1.4);
+  const [speed, setSpeed] = useState(0.9);
   const [jumping, setJumping] = useState(false);
   const [sliding, setSliding] = useState(false);
-  const [obstacleX, setObstacleX] = useState(105);
+  const [obstacleX, setObstacleX] = useState(160);
   const [currentObstacle, setCurrentObstacle] = useState<Obstacle>(obstacles[0]);
   const [highScores, setHighScores] = useState<number[]>([]);
 
@@ -48,7 +48,7 @@ export default function ArcadePage() {
   ];
 
   const currentGameBackground =
-    backgrounds[Math.floor(distance / 200) % backgrounds.length];
+    backgrounds[Math.floor(distance / 220) % backgrounds.length];
 
   useEffect(() => {
     try {
@@ -100,11 +100,11 @@ export default function ArcadePage() {
   }, [gameStarted, gameOver]);
 
   useEffect(() => {
-    if (distance > 900) setSpeed(2.8);
-    else if (distance > 600) setSpeed(2.4);
-    else if (distance > 350) setSpeed(2);
-    else if (distance > 150) setSpeed(1.7);
-    else setSpeed(1.4);
+    if (distance > 1200) setSpeed(2.6);
+    else if (distance > 900) setSpeed(2.2);
+    else if (distance > 600) setSpeed(1.8);
+    else if (distance > 300) setSpeed(1.3);
+    else setSpeed(0.9);
   }, [distance]);
 
   useEffect(() => {
@@ -112,9 +112,9 @@ export default function ArcadePage() {
 
     const timer = setInterval(() => {
       setObstacleX((x) => {
-        if (x <= -25) {
+        if (x <= -30) {
           chooseRandomObstacle();
-          return 115;
+          return 160;
         }
 
         return x - speed;
@@ -127,7 +127,10 @@ export default function ArcadePage() {
   useEffect(() => {
     if (!gameStarted || gameOver) return;
 
-    const touchingPlayer = obstacleX > 13 && obstacleX < 23;
+    const touchingPlayer =
+  currentObstacle.name === "Brancard"
+    ? obstacleX > 8 && obstacleX < 11
+    : obstacleX > 9 && obstacleX < 14;
 
     if (!touchingPlayer) return;
 
@@ -146,7 +149,7 @@ export default function ArcadePage() {
     if (jumping || sliding || gameOver) return;
 
     setJumping(true);
-    setTimeout(() => setJumping(false), 500);
+    setTimeout(() => setJumping(false), 520);
   }
 
   function slide() {
@@ -158,8 +161,8 @@ export default function ArcadePage() {
 
   function restartGame() {
     setDistance(0);
-    setSpeed(1.4);
-    setObstacleX(105);
+    setSpeed(0.9);
+    setObstacleX(160);
     setJumping(false);
     setSliding(false);
     setGameOver(false);
@@ -246,28 +249,28 @@ export default function ArcadePage() {
             </p>
           </div>
 
-          <div className="h-[58vh] min-h-[430px] max-h-[620px] bg-slate-600 rounded-2xl relative overflow-hidden touch-none">
+          <div className="h-[48vh] min-h-[330px] max-h-[430px] bg-slate-600 rounded-2xl relative overflow-hidden touch-none">
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{ backgroundImage: `url(${currentGameBackground})` }}
             />
 
-            <div className="absolute bottom-0 left-0 right-0 h-8 bg-slate-300" />
+            <div className="absolute bottom-[45px] left-0 right-0 h-8 bg-slate-300" />
 
             <div
               className={`absolute left-[10%] transition-all ${
                 jumping
-                  ? "bottom-[170px] duration-200 ease-out"
-                  : sliding
-                  ? "bottom-[8px] duration-200"
-                  : "bottom-[18px] duration-300 ease-in"
+  ? "bottom-[185px] duration-200 ease-out"
+  : sliding
+  ? "bottom-[64px] duration-200"
+  : "bottom-[82px] duration-300 ease-in"
               }`}
             >
               <img
                 src={sliding ? "/arcade/player-slide.png" : "/arcade/player.png"}
                 alt="Joueur"
                 className={`object-contain ${
-                  sliding ? "w-24 h-24" : "w-32 h-32"
+                  sliding ? "w-20 h-20" : "w-24 h-24"
                 }`}
               />
             </div>
@@ -275,8 +278,8 @@ export default function ArcadePage() {
             <div
               className={`absolute transition-none ${
                 currentObstacle.action === "jump"
-                  ? "bottom-[24px]"
-                  : "bottom-[185px]"
+  ? "bottom-[58px]"
+  : "bottom-[205px]"
               }`}
               style={{ left: `${obstacleX}%` }}
             >
@@ -284,25 +287,25 @@ export default function ArcadePage() {
                 <img
                   src="/arcade/syringe.png"
                   alt="Seringues"
-                  className="w-24 h-24 object-contain"
+                  className="w-20 h-20 object-contain"
                 />
               ) : currentObstacle.name === "Patient alcoolisé" ? (
                 <img
                   src="/arcade/drunk-patient.png"
                   alt="Patient alcoolisé"
-                  className="w-32 h-32 object-contain"
+                  className="w-24 h-24 object-contain"
                 />
               ) : currentObstacle.name === "Brancard" ? (
                 <img
                   src="/arcade/stretcher.png"
                   alt="Brancard"
-                  className="w-36 h-36 object-contain"
+                  className="w-28 h-28 object-contain"
                 />
               ) : currentObstacle.name === "Dossiers patients" ? (
                 <img
                   src="/arcade/files.png"
                   alt="Dossiers patients"
-                  className="w-20 h-20 object-contain"
+                  className="w-16 h-16 object-contain"
                 />
               ) : null}
             </div>
