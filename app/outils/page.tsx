@@ -47,6 +47,13 @@ export default function OutilsPage() {
           </Link>
 
           <Link
+            href="/outils/fluides"
+            className="block bg-cyan-600 text-white p-5 rounded-2xl font-bold text-lg"
+          >
+            🧪 Interprétation des fluides
+          </Link>
+
+          <Link
             href="/outils/tripcast"
             className="block bg-orange-600 text-white p-5 rounded-2xl font-bold text-lg"
           >
