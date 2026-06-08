@@ -100,12 +100,8 @@ export default function ArcadePage() {
   }, [gameStarted, gameOver]);
 
   useEffect(() => {
-  if (distance > 1000) setSpeed(3.4);
-  else if (distance > 800) setSpeed(3.0);
-  else if (distance > 600) setSpeed(2.6);
-  else if (distance > 400) setSpeed(2.2);
-  else if (distance > 200) setSpeed(1.8);
-  else setSpeed(1.4);
+  const newSpeed = Math.min(5.5, 2 + distance / 180);
+  setSpeed(newSpeed);
 }, [distance]);
 
   useEffect(() => {
