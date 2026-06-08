@@ -285,8 +285,8 @@ export default function ArcadePage() {
             <div
               className={`absolute transition-none ${
                 currentObstacle.action === "jump"
-  ? "bottom-[58px]"
-  : "bottom-[205px]"
+  ? "bottom-[68px]"
+  : "bottom-[150px]"
               }`}
               style={{ left: `${obstacleX}%` }}
             >
@@ -294,7 +294,7 @@ export default function ArcadePage() {
                 <img
                   src="/arcade/syringe.png"
                   alt="Seringues"
-                  className="w-20 h-20 object-contain"
+                  className="w-28 h-28 object-contain"
                 />
               ) : currentObstacle.name === "Patient alcoolisé" ? (
                 <img
