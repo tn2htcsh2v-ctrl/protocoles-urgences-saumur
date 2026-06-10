@@ -77,7 +77,12 @@ export const protocoles = {
   },
 ],
 
-  "Hématologie": [],
+ "Hématologie": [
+  {
+    titre: "Aplasie fébrile",
+    url: "https://drive.google.com/drive/folders/17Z-0K84KAn1wRi2vXrAu3VVy7Bb-LbzG"
+  },
+],
 
 "Neurologie": [
   {
