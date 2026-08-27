@@ -75,6 +75,10 @@ export const protocoles = {
     titre: "Décompensation oedémato ascitique",
     url: "https://drive.google.com/file/d/1uD5a1j5r8X7ZxsipDqCEP0vbLVh6d5DP/view?usp=share_link"
   },
+  {
+  titre: "Hépatite aiguë",
+  url: "https://drive.google.com/file/d/1xMwFxjMlR9zzNaI-6pbkB92KrI3OccUi/view?usp=sharing"
+},
 ],
 
  "Hématologie": [
