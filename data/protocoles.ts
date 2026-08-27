@@ -91,7 +91,7 @@ export const protocoles = {
 "Neurologie": [
   {
     titre: "Etat de mal épileptique",
-    url: "https://drive.google.com/file/d/15ODBijy_bVvlBeNwBMsJqbACj62aZmyH/view?usp=share_link"
+    url: "https://drive.google.com/file/d/1h1pXL6UNqU2i_rd0TP-gOVJ60lgsmAtc/view?usp=sharing"
   },
   {
     titre: "Epilepsie et sevrage",
