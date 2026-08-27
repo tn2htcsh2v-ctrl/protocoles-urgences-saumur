@@ -101,6 +101,10 @@ export const protocoles = {
     titre: "AIT",
     url: "https://drive.google.com/file/d/1YrDC1_C8VUAnXBiQtjzWNiA7ciwrJQmy/view?usp=share_link"
   },
+  {
+  titre: "Paralysie faciale périphérique",
+  url: "https://drive.google.com/file/d/1n-b2DFYDEcw7AWPcwGwRxiXXu4VVlJAW/view?usp=share_link"
+},
 ],
 
   "Métabolique": [],
