@@ -116,6 +116,10 @@ export const protocoles = {
     titre: "Décompensation de BPCO",
     url: "https://drive.google.com/file/d/1IT05UU5lFaPv_MOIYXyVTtWsTf0AK6WH/view?usp=share_link"
   },
+  {
+  titre: "Hémoptysie",
+  url: "https://drive.google.com/file/d/1s7HPIdQB_duRGl04M3TV8Su9rrU5hASc/view?usp=sharing"
+},
 ],
 
   "Rhumatologie": [],
