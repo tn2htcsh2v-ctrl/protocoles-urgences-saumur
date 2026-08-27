@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { medicaments, type Population } from "../../data/medicaments";
-
-const PDF_URL = "/medicaments/livret-medicaments-urgence.pdf";
 
 type Filtre = "tous" | Population;
 
@@ -24,18 +23,26 @@ function normaliser(texte: string) {
 function BoutonPopulation({
   population,
   page,
+  medicamentIndex,
+  recherche,
+  filtre,
 }: {
   population: Population;
   page: number;
+  medicamentIndex: number;
+  recherche: string;
+  filtre: Filtre;
 }) {
   const pediatrie = population === "pediatrie";
+  const parametres = new URLSearchParams();
+  if (recherche) parametres.set("q", recherche);
+  if (filtre !== "tous") parametres.set("filtre", filtre);
+  const query = parametres.toString();
 
   return (
-    <a
-      href={`${PDF_URL}#page=${page}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`Ouvrir la fiche ${pediatrie ? "pédiatrique" : "adulte"} à la page ${page}`}
+    <Link
+      href={`/medicaments/lecture/${medicamentIndex}/${population}${query ? `?${query}` : ""}`}
+      aria-label={`Lire la fiche ${pediatrie ? "pédiatrique" : "adulte"} à la page ${page}`}
       className={`inline-flex min-h-11 items-center justify-center rounded-xl border px-4 py-2.5 text-sm font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 ${
         pediatrie
           ? "border-teal-200 bg-teal-50 text-teal-800 hover:bg-teal-100 focus-visible:outline-teal-600"
@@ -44,13 +51,32 @@ function BoutonPopulation({
     >
       {pediatrie ? "Pédiatrie" : "Adulte"}
       <span className="ml-2 text-xs font-medium opacity-70">p. {page}</span>
-    </a>
+    </Link>
   );
 }
 
-export default function MedicamentsPage() {
-  const [recherche, setRecherche] = useState("");
-  const [filtre, setFiltre] = useState<Filtre>("tous");
+function GuideMedicaments() {
+  const searchParams = useSearchParams();
+  const filtreInitial = searchParams.get("filtre");
+  const [recherche, setRecherche] = useState(searchParams.get("q") ?? "");
+  const [filtre, setFiltre] = useState<Filtre>(
+    filtreInitial === "adulte" || filtreInitial === "pediatrie"
+      ? filtreInitial
+      : "tous",
+  );
+
+  useEffect(() => {
+    const parametres = new URLSearchParams();
+    if (recherche) parametres.set("q", recherche);
+    if (filtre !== "tous") parametres.set("filtre", filtre);
+
+    const query = parametres.toString();
+    window.history.replaceState(
+      window.history.state,
+      "",
+      `/medicaments${query ? `?${query}` : ""}`,
+    );
+  }, [filtre, recherche]);
 
   const resultats = useMemo(() => {
     const termes = normaliser(recherche).trim().split(/\s+/).filter(Boolean);
@@ -134,7 +160,10 @@ export default function MedicamentsPage() {
           </div>
 
           <div className="divide-y divide-slate-200">
-            {resultats.map((medicament) => (
+            {resultats.map((medicament) => {
+              const medicamentIndex = medicaments.indexOf(medicament);
+
+              return (
               <article key={`${medicament.dci}-${medicament.nomCommercial}`} className="p-4 sm:p-6">
                 <div className="min-w-0">
                   <h2 className="text-lg font-bold leading-snug text-slate-900">
@@ -147,14 +176,27 @@ export default function MedicamentsPage() {
 
                 <div className="mt-4 flex flex-wrap gap-2">
                   {medicament.pages.adulte && (
-                    <BoutonPopulation population="adulte" page={medicament.pages.adulte} />
+                    <BoutonPopulation
+                      population="adulte"
+                      page={medicament.pages.adulte}
+                      medicamentIndex={medicamentIndex}
+                      recherche={recherche}
+                      filtre={filtre}
+                    />
                   )}
                   {medicament.pages.pediatrie && (
-                    <BoutonPopulation population="pediatrie" page={medicament.pages.pediatrie} />
+                    <BoutonPopulation
+                      population="pediatrie"
+                      page={medicament.pages.pediatrie}
+                      medicamentIndex={medicamentIndex}
+                      recherche={recherche}
+                      filtre={filtre}
+                    />
                   )}
                 </div>
               </article>
-            ))}
+              );
+            })}
 
             {resultats.length === 0 && (
               <div className="px-6 py-14 text-center">
@@ -173,5 +215,13 @@ export default function MedicamentsPage() {
         </p>
       </div>
     </main>
+  );
+}
+
+export default function MedicamentsPage() {
+  return (
+    <Suspense fallback={<main className="min-h-screen bg-slate-100" />}>
+      <GuideMedicaments />
+    </Suspense>
   );
 }
