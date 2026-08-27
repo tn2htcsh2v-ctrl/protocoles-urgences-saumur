@@ -77,6 +77,13 @@ export default function Home() {
           </Link>
 
           <Link
+            href="/medicaments"
+            className="bg-cyan-700 hover:bg-cyan-800 text-white p-5 rounded-xl font-bold text-center"
+          >
+            💊 Guide médicamenteux
+          </Link>
+
+          <Link
             href="/arcade"
             className="bg-pink-600 hover:bg-pink-700 text-white p-5 rounded-xl font-bold text-center"
           >
