@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { PDFDocumentProxy, RenderTask } from "pdfjs-dist";
 
 const PDF_URL = "/medicaments/livret-medicaments-urgence.pdf";
-const WORKER_URL = "/medicaments/pdf.worker.min.mjs";
+const WORKER_URL = "/pdf.worker.min.mjs";
 
 type LecteurPdfProps = {
   pageInitiale: number;
