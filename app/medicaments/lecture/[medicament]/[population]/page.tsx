@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { medicaments, type Population } from "../../../../../data/medicaments";
+import LecteurPdf from "../../lecteur-pdf";
 
 const PDF_URL = "/medicaments/livret-medicaments-urgence.pdf";
 
@@ -47,7 +48,6 @@ export default async function LectureMedicamentPage({
   if (filtre !== "tous") retourParams.set("filtre", filtre);
   const retourQuery = retourParams.toString();
   const retourHref = `/medicaments${retourQuery ? `?${retourQuery}` : ""}`;
-  const pdfHref = `${PDF_URL}#page=${page}`;
   const populationLibelle = population === "pediatrie" ? "Pédiatrie" : "Adulte";
 
   return (
@@ -67,21 +67,17 @@ export default async function LectureMedicamentPage({
           </div>
 
           <a
-            href={pdfHref}
+            href={PDF_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex min-h-11 items-center justify-center self-stretch rounded-xl border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-100 sm:self-auto"
           >
-            Ouvrir le PDF en plein écran
+            Ouvrir le PDF complet
           </a>
         </div>
       </header>
 
-      <iframe
-        src={pdfHref}
-        title={`${medicament.dci} — ${populationLibelle}, page ${page}`}
-        className="min-h-0 w-full flex-1 border-0 bg-white"
-      />
+      <LecteurPdf pageInitiale={page} />
     </main>
   );
 }
