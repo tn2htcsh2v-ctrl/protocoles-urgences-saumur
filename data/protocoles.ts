@@ -80,7 +80,7 @@ export const protocoles = {
  "Hématologie": [
   {
     titre: "Aplasie fébrile",
-    url: "https://drive.google.com/file/d/1tJjNP9rk0iOSiL70NIHEsj9IUwKmm8Sk/view?usp=share_link"
+    url: "https://drive.google.com/file/d/1I8IYFyH_Y8SXVOCFUIZ0YyJzQwvM4xvE/view?usp=share_link"
   },
 ],
 
