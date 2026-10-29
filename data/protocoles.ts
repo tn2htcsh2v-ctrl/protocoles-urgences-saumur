@@ -164,6 +164,16 @@ export const protocoles = {
     titre: "Traumatologie du rachis",
     url: "https://drive.google.com/file/d/1GUEi3tYP7s6UlHcnxrKxrqY6V_1vK_wW/view?usp=share_link"
   },
+
+{
+  titre: "Fracture en motte de beurre",
+  url: "https://drive.google.com/file/d/1sdUhAT3IAHFNxf1ZAWR4kptsa_als369/view"
+},
+{
+  titre: "Entorse de cheville de l'enfant",
+  url: "https://drive.google.com/file/d/1q3SIsJ7GMQkXKjp9nNwkcAb3Lhr6flWd/view"
+}
+
 ],
 
   "Urologie - Néphrologie": [],
